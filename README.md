@@ -16,7 +16,7 @@ Dostępne są **4** typy zmiennych:
 - whole => int
 - doulot => double/float
 - boolean
-- inscription -> string
+- inscription +> string
 
 Zmienne zaczynają się małą litera.
 Dodatkowo wartość `null` reprezentowana jest przez `nope`.
