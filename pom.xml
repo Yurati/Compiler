@@ -8,6 +8,14 @@
     <artifactId>Compiler</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4</artifactId>
+            <version>4.8</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <pluginManagement>
             <plugins>
