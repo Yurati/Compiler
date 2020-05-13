@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        String input = "11 + 22 - 33 \n whole";
+        String input = "11 + 22 - 33 \n irrelevant blablabla \n 1.1 ";
         Lexer lexer = new Lexer();
 
         // Create tokens and print them
