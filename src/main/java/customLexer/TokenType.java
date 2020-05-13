@@ -39,7 +39,8 @@ public enum TokenType {
     GE("<="),
     NOTEQUAL("\\?=="),
     AND("\\|\\|"),
-    OR("\\&\\&");
+    OR("\\&\\&"),
+    OTHERSTRING("[a-zA-Z0-9_]+");
 
     public final String pattern;
 

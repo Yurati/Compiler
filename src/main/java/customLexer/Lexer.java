@@ -100,6 +100,8 @@ public class Lexer {
                     tokens.add(new Token(TokenType.OR, matcher.group(TokenType.OR.name())));
                 } else if (matcher.group(TokenType.DOT.name()) != null) {
                     tokens.add(new Token(TokenType.DOT, matcher.group(TokenType.DOT.name())));
+                } else if (matcher.group(TokenType.OTHERSTRING.name()) != null) {
+                    tokens.add(new Token(TokenType.OTHERSTRING, matcher.group(TokenType.OTHERSTRING.name())));
                 }
             }
             if (createNewLine) tokens.add(new Token(TokenType.NEWLINE, ""));
