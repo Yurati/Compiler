@@ -29,7 +29,33 @@ public class Lexer {
                 tokens.add(new Token(TokenType.MUL, matcher.group(TokenType.MUL.name())));
             } else if (matcher.group(TokenType.DIV.name()) != null) {
                 tokens.add(new Token(TokenType.DIV, matcher.group(TokenType.DIV.name())));
-            } else if (matcher.group(TokenType.WHITESPACE.name()) != null) continue;
+            } else if (matcher.group(TokenType.NEWLINE.name()) != null) {
+                tokens.add(new Token(TokenType.NEWLINE, ""));
+            } else if (matcher.group(TokenType.WHITESPACE.name()) != null) {
+                continue;
+            } else if (matcher.group(TokenType.WHOLE.name()) != null) {
+                tokens.add(new Token(TokenType.WHOLE, matcher.group(TokenType.WHOLE.name())));
+            } else if (matcher.group(TokenType.DOULOT.name()) != null) {
+                tokens.add(new Token(TokenType.DOULOT, matcher.group(TokenType.DOULOT.name())));
+            } else if (matcher.group(TokenType.BOOELAN.name()) != null) {
+                tokens.add(new Token(TokenType.BOOELAN, matcher.group(TokenType.BOOELAN.name())));
+            } else if (matcher.group(TokenType.INSCRIPTION.name()) != null) {
+                tokens.add(new Token(TokenType.INSCRIPTION, matcher.group(TokenType.INSCRIPTION.name())));
+            } else if (matcher.group(TokenType.FUNC.name()) != null) {
+                tokens.add(new Token(TokenType.FUNC, matcher.group(TokenType.FUNC.name())));
+            } else if (matcher.group(TokenType.UNLESS.name()) != null) {
+                tokens.add(new Token(TokenType.UNLESS, matcher.group(TokenType.UNLESS.name())));
+            } else if (matcher.group(TokenType.ANDWHILE.name()) != null) {
+                tokens.add(new Token(TokenType.ANDWHILE, matcher.group(TokenType.ANDWHILE.name())));
+            } else if (matcher.group(TokenType.AGAINST.name()) != null) {
+                tokens.add(new Token(TokenType.AGAINST, matcher.group(TokenType.AGAINST.name())));
+            } else if (matcher.group(TokenType.DONT.name()) != null) {
+                tokens.add(new Token(TokenType.DONT, matcher.group(TokenType.DONT.name())));
+            } else if (matcher.group(TokenType.NOTTHISTIME.name()) != null) {
+                tokens.add(new Token(TokenType.NOTTHISTIME, matcher.group(TokenType.NOTTHISTIME.name())));
+            } else if (matcher.group(TokenType.IRRELEVANT.name()) != null) {
+                tokens.add(new Token(TokenType.IRRELEVANT, matcher.group(TokenType.IRRELEVANT.name())));
+            }
         }
 
         return tokens;
