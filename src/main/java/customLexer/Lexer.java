@@ -1,12 +1,13 @@
 package customLexer;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Lexer {
 
-    public ArrayList<Token> lex(String input) {
+    public ArrayList<Token> lex(String input){
         // The tokens to return
         ArrayList<Token> tokens = new ArrayList<Token>();
 
@@ -22,7 +23,10 @@ public class Lexer {
             // Begin matching tokens
             Matcher matcher = tokenPatterns.matcher(lines[i]);
             boolean createNewLine = true;
+            int lastKnownSign = 0;
             while (matcher.find()) {
+                lastKnownSign = catchUnknownSign(matcher, lastKnownSign, i);
+
                 if (matcher.group(TokenType.ADD.name()) != null) {
                     tokens.add(new Token(TokenType.ADD, matcher.group(TokenType.ADD.name())));
                 } else if (matcher.group(TokenType.NUMBER.name()) != null) {
@@ -104,10 +108,28 @@ public class Lexer {
                     tokens.add(new Token(TokenType.OTHERSTRING, matcher.group(TokenType.OTHERSTRING.name())));
                 }
             }
-            if (createNewLine) tokens.add(new Token(TokenType.NEWLINE, ""));
+
+            if (createNewLine) {
+                catchUnknownSignAtTheEndOfLine(lastKnownSign, matcher.regionEnd(), i);
+                tokens.add(new Token(TokenType.NEWLINE, ""));
+            }
         }
 
 
         return tokens;
+    }
+
+    private int catchUnknownSign(Matcher matcher, int lastKnownSignPreviousMatch, int lineNo) throws Error{
+        if (matcher.start() != lastKnownSignPreviousMatch){
+            throw new Error("(" + lineNo + "," + (lastKnownSignPreviousMatch+1) + ") illegal expression");
+        }
+
+        return matcher.end();
+    }
+
+    private void catchUnknownSignAtTheEndOfLine(int lastKnownSignPreviousMatch, int lineLength, int lineNo) throws Error{
+        if (lineLength != lastKnownSignPreviousMatch){
+            throw new Error("(" + (lineNo+1) + "," + (lastKnownSignPreviousMatch+1) + ") illegal expression");
+        }
     }
 }
