@@ -31,6 +31,19 @@ powstały w ostatnim kroku wyprowadzenia. Segment ten (nazywany uchwytem) jest p
 powinien zostać w tym kroku zredukowany do jej lewej strony, w wyniku czego powstanie poprzednia forma 
 zdaniowa z wyprowadzenia. Główna trudność w analizie wstępującej polega właśnie na odpowiednim znajdywaniu uchwytów.
 
+### Lekser
+Lekser to program dokonujący analizy leksykalnej. Analiza leksykalna to proces przetwarzania sekwencji znaków w sekwencję tokenów, 
+czyli nacechowanych znaczeniowo leksemów.Zazwyczaj lekser działa w parze z parserem, z którym wspólnie analizują składnię języków programowania.
+
+Token - struktura reprezentującą leksem i wprost go kategoryzującą. Token mieści w sobie kategorie naprzykład takie jak: operator przypisania,
+liczba, typ danych. Każda kategoria jest opisana wyrażeniem regularnym według którego będzie rozpoznana w kodzie żródłowym.
+
+Ściślej rzecz biorąc, lekser jest też rodzajem parsera. Składnia wielu języków programowania dzieli się na dwie części: składnię leksykalną 
+(wewnętrzną konstrukcję tokenu), która jest przetwarzana przez lekser i składnię gramatyczną, która jest przetwarzana przez parser.
+Składnia leksykalna jest zazwyczaj wyrażeniem regularnym którego alfabet składa się z pojedynczych znaków kodu źródłowego.
+Składnia gramatyczna to zazwyczaj bezkontekstowy język, którego alfabet składa się z tokenów produkowanych przez lekser.
+Zwyczajowo analiza tekstu przebiega w wymienionych wyżej dwóch fazach, jednak lekser może być połączony z parserem w przetwarzaniu jednoprzebiegowym.
+
 ### Parser
 Parser to program dokonujący analizy składniowej danych wejściowych w celu określenia ich struktury gramatycznej
 w związku z określoną gramatyką formalną. Analizator składniowy umożliwia przetworzenie tekstu czytelnego dla człowieka 
