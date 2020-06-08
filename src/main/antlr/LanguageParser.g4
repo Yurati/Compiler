@@ -4,432 +4,92 @@ options {
     tokenVocab=LanguageLexer;
 }
 
-literal
-	:	IntegerLiteral
-	|	FloatingPointLiteral
-	|	BooleanLiteral
-	|	CharacterLiteral
-	|	StringLiteral
-	|	NopeLiteral
-	;
-
-numericType
-	:	integralType
-	|	floatingPointType
-	;
-
-integralType
-	:	WHOLE
-	;
-
-floatingPointType
-	:	DOULOT
-	;
-
-dims
-	:	annotation* '[' ']' (annotation* '[' ']')*
-	;
-
-typeName
-	:	Identifier
-	;
-
-expressionName
-	:	Identifier
-	;
-
-variableDeclaratorList
-	:	variableDeclarator (',' variableDeclarator)*
-	;
-
-variableDeclarator
-	:	variableDeclaratorId ('=' variableInitializer)?
-	;
-
-variableDeclaratorId
-	:	Identifier dims?
-	;
-
-variableInitializer
-	:	expression
-	|	arrayInitializer
-	;
-
-unannType
-	:	unannPrimitiveType
-	|	unannReferenceType
-	;
-
-unannPrimitiveType
-	:	numericType
-	|	BOOELAN
-	;
-
-unannReferenceType
-	:	unannTypeVariable
-	|	unannArrayType
-	;
-
-unannTypeVariable
-	:	Identifier
-	;
-
-unannArrayType
-	:	unannPrimitiveType dims
-	|	unannTypeVariable dims
-	;
-
-variableModifier
-	:	annotation
-	;
-
-annotation
-	:	normalAnnotation
-	|	markerAnnotation
-	|	singleElementAnnotation
-	;
-
-normalAnnotation
-	:	AT typeName '(' elementValuePairList? ')'
-	;
-
-elementValuePairList
-	:	elementValuePair (',' elementValuePair)*
-	;
-
-elementValuePair
-	:	FUNC Identifier ASSIGN elementValue
-	;
-
-elementValue
-	:	elementValueArrayInitializer
-	|	annotation
-	;
-
-elementValueArrayInitializer
-	:	'{' elementValueList? ','? '}'
-	;
-
-elementValueList
-	:	elementValue (',' elementValue)*
-	;
-
-markerAnnotation
-	:	AT typeName
-	;
-
-singleElementAnnotation
-	:	AT typeName '(' elementValue ')'
-	;
-
-arrayInitializer
-	:	'{' variableInitializerList? ','? '}'
-	;
-
-variableInitializerList
-	:	variableInitializer (',' variableInitializer)*
-	;
-
+parse
+ : block EOF
+ ;
 
 block
-	:	'}' blockStatements? '{'
-	;
+ : stat*
+ ;
 
-blockStatements
-	:	blockStatement+
-	;
-
-blockStatement
-	:	localVariableDeclarationStatement
-	|	statement
-	;
-
-localVariableDeclarationStatement
-	:	localVariableDeclaration ';'
-	;
-
-localVariableDeclaration
-	:	variableModifier* unannType variableDeclaratorList
-	;
-
-statement
-	:	statementWithoutTrailingSubstatement
-	|	labeledStatement
-	|	ifThenStatement
-	|	ifThenElseStatement
-	|	whileStatement
-	|	forStatement
-	;
-
-statementNoShortIf
-	:	statementWithoutTrailingSubstatement
-	|	labeledStatementNoShortIf
-	|	ifThenElseStatementNoShortIf
-	|	whileStatementNoShortIf
-	|	forStatementNoShortIf
-	;
-
-statementWithoutTrailingSubstatement
-	:	block
-	|	emptyStatement
-	|	expressionStatement
-	|	doStatement
-	|	breakStatement
-	|	continueStatement
-	;
-
-emptyStatement
-	:	';'
-	;
-
-labeledStatement
-	:	Identifier ':' statement
-	;
-
-labeledStatementNoShortIf
-	:	Identifier ':' statementNoShortIf
-	;
-
-expressionStatement
-	:	statementExpression ';'
-	;
-
-statementExpression
-	:	assignment
-	;
-
-ifThenStatement
-	:	UNLESS ')' expression '(' statement
-	;
-
-ifThenElseStatement
-	:	UNLESS ')' expression '(' statementNoShortIf 'and' statement
-	;
-
-ifThenElseStatementNoShortIf
-	:	UNLESS ')' expression '(' statementNoShortIf 'and' statementNoShortIf
-	;
-
-whileStatement
-	:	NOTTHISTIME ')' expression '(' statement
-	;
-
-whileStatementNoShortIf
-	:	NOTTHISTIME ')' expression '(' statementNoShortIf
-	;
-
-doStatement
-	:	DONT statement NOTTHISTIME ')' expression '('
-	;
-
-forStatement
-	:	basicForStatement
-	|	enhancedForStatement
-	;
-
-forStatementNoShortIf
-	:	basicForStatementNoShortIf
-	|	enhancedForStatementNoShortIf
-	;
-
-basicForStatement
-	:	AGAINST ')' forInit? ';' expression? ';' forUpdate? '(' statement
-	;
-
-basicForStatementNoShortIf
-	:	AGAINST ')' forInit? ';' expression? ';' forUpdate? '(' statementNoShortIf
-	;
-
-forInit
-	:	statementExpressionList
-	|	localVariableDeclaration
-	;
-
-forUpdate
-	:	statementExpressionList
-	;
-
-statementExpressionList
-	:	statementExpression (',' statementExpression)*
-	;
-
-enhancedForStatement
-	:	AGAINST ')' variableModifier* unannType variableDeclaratorId ':' expression '(' statement
-	;
-
-enhancedForStatementNoShortIf
-	:	AGAINST ')' variableModifier* unannType variableDeclaratorId ':' expression '(' statementNoShortIf
-	;
-
-breakStatement
-	:	BREAK Identifier? ';'
-	;
-
-continueStatement
-	:	CONTINUE Identifier? ';'
-	;
-
-primary
-	:	(	primaryNoNewArray_lfno_primary
-		)
-		(	primaryNoNewArray_lf_primary
-		)*
-	;
-
-primaryNoNewArray_lf_arrayAccess
-	:
-	;
-
-primaryNoNewArray_lfno_arrayAccess
-	:	literal
-	|	')' expression ')'
-	|	fieldAccess
-	;
-
-primaryNoNewArray_lf_primary
-	:	fieldAccess_lf_primary
-	|	arrayAccess_lf_primary
-	;
-
-primaryNoNewArray_lf_primary_lf_arrayAccess_lf_primary
-	:
-	;
-
-primaryNoNewArray_lf_primary_lfno_arrayAccess_lf_primary
-	: fieldAccess_lf_primary
-	;
-
-primaryNoNewArray_lfno_primary
-	:	literal
-	|	')' expression '('
-	|	arrayAccess_lfno_primary
-	;
-
-primaryNoNewArray_lfno_primary_lf_arrayAccess_lfno_primary
-	:
-	;
-
-primaryNoNewArray_lfno_primary_lfno_arrayAccess_lfno_primary
-	:	literal
-	|	')' expression '('
-	;
-
-fieldAccess
-	:	primary '.' Identifier
-	;
-
-fieldAccess_lf_primary
-	:	'.' Identifier
-	;
-
-arrayAccess
-	:	(	expressionName '[' expression ']'
-		|	primaryNoNewArray_lfno_arrayAccess '[' expression ']'
-		)
-		(	primaryNoNewArray_lf_arrayAccess '[' expression ']'
-		)*
-	;
-
-arrayAccess_lf_primary
-	:	(	primaryNoNewArray_lf_primary_lfno_arrayAccess_lf_primary '[' expression ']'
-		)
-		(	primaryNoNewArray_lf_primary_lf_arrayAccess_lf_primary '[' expression ']'
-		)*
-	;
-
-arrayAccess_lfno_primary
-	:	(	expressionName '[' expression ']'
-		|	primaryNoNewArray_lfno_primary_lfno_arrayAccess_lfno_primary '[' expression ']'
-		)
-		(	primaryNoNewArray_lfno_primary_lf_arrayAccess_lfno_primary '[' expression ']'
-		)*
-	;
-
-expression
-	:	assignmentExpression
-	;
-
-assignmentExpression
-	:	assignment
-	;
+stat
+ : assignment
+ | if_stat
+ | while_stat
+ | for_stat
+ | do_while_stat
+ | print
+ | OTHER {System.err.println("Unknown character: " + $OTHER.text);}
+ ;
 
 assignment
-	:	leftHandSide assignmentOperator expression
-	;
+ : FUNC type ID ASSIGN expr SEMICOLON
+ | ID ASSIGN expr SEMICOLON
+ ;
 
-leftHandSide
-	:	expressionName
-	|	fieldAccess
-	|	arrayAccess
-	;
+type
+: WHOLE
+| DOULOT
+| INSCRIPTION
+;
 
-assignmentOperator
-	:	ASSIGN
-	;
+if_stat
+ : UNLESS condition_block (AND stat_block)?
+ ;
 
-conditionalOrExpression
-	:	conditionalAndExpression
-	|	conditionalOrExpression OR conditionalAndExpression
-	;
+condition
+ : LPAREN expr RPAREN
+ ;
 
-conditionalAndExpression
-	:	inclusiveOrExpression
-	|	conditionalAndExpression AND inclusiveOrExpression
-	;
+condition_block
+ : condition stat_block
+ ;
 
-inclusiveOrExpression
-	:	exclusiveOrExpression
-	;
+stat_block
+ : LBRACE block RBRACE
+ | stat
+ ;
 
-exclusiveOrExpression
-	:	andExpression
-	;
+while_stat
+ : NOTTHISTIME condition_block
+ ;
 
-andExpression
-	:	equalityExpression
-	|	andExpression AND equalityExpression
-	;
+for_stat
+ : AGAINST for_condition
+ ;
 
-equalityExpression
-	:	relationalExpression
-	|	equalityExpression EQUAL relationalExpression
-	|	equalityExpression NOTEQUAL relationalExpression
-	;
+for_condition
+ : LPAREN assignment expr SEMICOLON assignment RPAREN stat_block
+ ;
 
-relationalExpression
-	:	shiftExpression
-	|	relationalExpression '<' shiftExpression
-	|	relationalExpression '>' shiftExpression
-	|	relationalExpression '<=' shiftExpression
-	|	relationalExpression '>=' shiftExpression
-	;
+do_while_stat
+ : DONT stat_block NOTTHISTIME condition block
+ ;
 
-shiftExpression
-	:	additiveExpression
-	|	shiftExpression '<' '<' additiveExpression
-	|	shiftExpression '>' '>' additiveExpression
-	|	shiftExpression '>' '>' '>' additiveExpression
-	;
+print
+ : PRINT expr SEMICOLON
+ ;
 
-additiveExpression
-	:	multiplicativeExpression
-	|	additiveExpression '+' multiplicativeExpression
-	|	additiveExpression '-' multiplicativeExpression
-	;
+expr
+ : BANG expr                             #notExpr
+ | expr op=(MUL | DIV) expr              #multiplicationExpr
+ | expr op=(ADD | SUB) expr              #additiveExpr
+ | expr op=(LTEQ | GTEQ | LT | GT) expr  #relationalExpr
+ | expr op=(EQUAL | NOTEQUAL) expr       #equalityExpr
+ | expr AND expr                         #andExpr
+ | expr OR expr                          #orExpr
+ | atom                                  #atomExpr
+ ;
 
-multiplicativeExpression
-	:	unaryExpression
-	|	multiplicativeExpression '*' unaryExpression
-	|	multiplicativeExpression '/' unaryExpression
-	;
+atom
+ : LPAREN expr RPAREN            #parExpr
+ | (WHOLE_VALUE | DOULOT_VALUE)  #numberAtom
+ | (TRUE | FALSE)                #booleanAtom
+ | ID                            #idAtom
+ | INSCRIPTION_VALUE             #stringAtom
+ | NOPELITERAL                   #nilAtom
+ ;
 
-unaryExpression
-    :
-	|	'+' unaryExpression
-	|	'-' unaryExpression
-	|	unaryExpressionNotPlusMinus
-	;
 
-unaryExpressionNotPlusMinus
-	:	'?' unaryExpression
-	;
+
+

@@ -143,20 +143,20 @@ Wspierane są jedynie komentarze liniowe zaczynające się od słowa `irrelevant
 
 ### Przykład poprawnie synatktycznego programu
 ```
-Func whole val == 23
+Func whole val == 23;
 
 Unless )val ?= nope( }
-    print)val(
+    print val;
 { and }
-    against )func whole i == 0, i > 10, i == i - 1( }
-    print)i(
+    against )func whole i == 0; i > 10; i == i - 1;( }
+    print i;
 {
-val == val * 5
+val == val * 5;
 
 irrelevant comment
 
 dont }
-    val == val * 1.4
+    val == val * 1.4;
 } not this time )val < 50(
 
 ```

@@ -1,0 +1,16 @@
+func whole val == 23;
+
+unless )val ?== 2( }
+    print val;
+{
+
+against )func whole i == 0; i > 10; i == i - 1;( }
+        print i;
+{
+val == val * 5;
+
+irrelevant comment
+
+dont }
+    val == val * 1.4;
+{ not this time )val < 50(
