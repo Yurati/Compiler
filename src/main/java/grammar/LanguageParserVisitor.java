@@ -47,6 +47,12 @@ public interface LanguageParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIf_stat(LanguageParser.If_statContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link LanguageParser#condition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondition(LanguageParser.ConditionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link LanguageParser#condition_block}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

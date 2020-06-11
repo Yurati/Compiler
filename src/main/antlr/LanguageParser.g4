@@ -34,7 +34,7 @@ type
 ;
 
 if_stat
- : UNLESS condition_block (AND stat_block)?
+ : UNLESS condition_block (ELSE stat_block)?
  ;
 
 condition

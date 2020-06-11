@@ -7,7 +7,7 @@ BOOELAN: 'boolean';
 INSCRIPTION: 'inscription';
 FUNC: 'func';
 UNLESS: 'unless';
-ANDWHILE: 'and';
+ELSE: 'and';
 AGAINST: 'against';
 DONT: 'dont';
 NOTTHISTIME: 'not this time';

@@ -17,7 +17,7 @@ public class LanguageLexer extends Lexer {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		WHOLE=1, DOULOT=2, BOOELAN=3, INSCRIPTION=4, FUNC=5, UNLESS=6, ANDWHILE=7, 
+		WHOLE=1, DOULOT=2, BOOELAN=3, INSCRIPTION=4, FUNC=5, UNLESS=6, ELSE=7, 
 		AGAINST=8, DONT=9, NOTTHISTIME=10, IRRELEVANT=11, BREAK=12, CONTINUE=13, 
 		PRINT=14, TRUE=15, FALSE=16, NOPELITERAL=17, RPAREN=18, LPAREN=19, RBRACE=20, 
 		LBRACE=21, RBRACK=22, LBRACK=23, SEMICOLON=24, COMMA=25, DOT=26, ASSIGN=27, 
@@ -35,7 +35,7 @@ public class LanguageLexer extends Lexer {
 
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"WHOLE", "DOULOT", "BOOELAN", "INSCRIPTION", "FUNC", "UNLESS", "ANDWHILE", 
+			"WHOLE", "DOULOT", "BOOELAN", "INSCRIPTION", "FUNC", "UNLESS", "ELSE", 
 			"AGAINST", "DONT", "NOTTHISTIME", "IRRELEVANT", "BREAK", "CONTINUE", 
 			"PRINT", "TRUE", "FALSE", "NOPELITERAL", "RPAREN", "LPAREN", "RBRACE", 
 			"LBRACE", "RBRACK", "LBRACK", "SEMICOLON", "COMMA", "DOT", "ASSIGN", 
@@ -60,12 +60,12 @@ public class LanguageLexer extends Lexer {
 	private static String[] makeSymbolicNames() {
 		return new String[] {
 			null, "WHOLE", "DOULOT", "BOOELAN", "INSCRIPTION", "FUNC", "UNLESS", 
-			"ANDWHILE", "AGAINST", "DONT", "NOTTHISTIME", "IRRELEVANT", "BREAK", 
-			"CONTINUE", "PRINT", "TRUE", "FALSE", "NOPELITERAL", "RPAREN", "LPAREN", 
-			"RBRACE", "LBRACE", "RBRACK", "LBRACK", "SEMICOLON", "COMMA", "DOT", 
-			"ASSIGN", "GT", "LT", "BANG", "QUESTION", "COLON", "EQUAL", "LTEQ", "GTEQ", 
-			"NOTEQUAL", "AND", "OR", "ADD", "SUB", "MUL", "DIV", "COMMENT", "ID", 
-			"WHOLE_VALUE", "DOULOT_VALUE", "INSCRIPTION_VALUE", "SPACE", "OTHER"
+			"ELSE", "AGAINST", "DONT", "NOTTHISTIME", "IRRELEVANT", "BREAK", "CONTINUE", 
+			"PRINT", "TRUE", "FALSE", "NOPELITERAL", "RPAREN", "LPAREN", "RBRACE", 
+			"LBRACE", "RBRACK", "LBRACK", "SEMICOLON", "COMMA", "DOT", "ASSIGN", 
+			"GT", "LT", "BANG", "QUESTION", "COLON", "EQUAL", "LTEQ", "GTEQ", "NOTEQUAL", 
+			"AND", "OR", "ADD", "SUB", "MUL", "DIV", "COMMENT", "ID", "WHOLE_VALUE", 
+			"DOULOT_VALUE", "INSCRIPTION_VALUE", "SPACE", "OTHER"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
