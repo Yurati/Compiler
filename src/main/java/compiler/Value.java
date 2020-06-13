@@ -45,6 +45,26 @@ public class Value {
     }
 
     @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(value == obj) {
+            return true;
+        }
+
+        if(value == null || obj == null || obj.getClass() != value.getClass()) {
+            return false;
+        }
+
+        Value that = (Value)obj;
+
+        return this.value.equals(that.value);
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(value);
     }

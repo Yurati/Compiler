@@ -10,8 +10,6 @@ import java.util.Map;
 public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
     Map<String, Value> memory = new HashMap<>();
 
-    double DOUBLE_COMPARE = 0.00000000000001;
-
 /*    @Override
     public Value visitParse(LanguageParser.ParseContext ctx) {
         return null;
@@ -54,7 +52,6 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
             this.visit(conditionBlock.stat_block());
         }
 
-
         if(!evaluatedBlock && ctx.stat_block() != null) {
             this.visit(ctx.stat_block());
         }
@@ -84,6 +81,8 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
     @Override
     public Value visitFor_stat(LanguageParser.For_statContext ctx) {
 
+        LanguageParser.For_conditionContext forCondition =  ctx.for_condition();
+
         return new Value();
     }
 
@@ -112,7 +111,11 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
     @Override
     public Value visitPrint(LanguageParser.PrintContext ctx) {
         Value value = this.visit(ctx.expr());
-        System.out.println(value);
+        if(value.isString()) {
+            System.out.println(value.asString().substring(1,value.asString().length()-1));
+        }else {
+            System.out.println(value);
+        }
         return null;
     }
 
@@ -140,9 +143,13 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
 
         switch (ctx.op.getType()) {
             case LanguageParser.MUL:
-                return new Value(left.asDouble() * right.asDouble());
+                return left.isDouble() && right.isDouble() ?
+                        new Value(left.asDouble() * right.asDouble()) :
+                        new Value(left.asInteger() * right.asInteger());
             case LanguageParser.DIV:
-                return new Value(left.asDouble() / right.asDouble());
+                return left.isDouble() && right.isDouble() ?
+                        new Value(left.asDouble() / right.asDouble()) :
+                        new Value(left.asInteger() / right.asInteger());
             default:
                 throw new RuntimeException("unknown operator: " + LanguageParser.tokenNames[ctx.op.getType()]);
         }
@@ -156,12 +163,17 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
 
         switch (ctx.op.getType()) {
             case LanguageParser.ADD:
-                return left.isString() && right.isString() ?
-                        new Value(left.asString() + right.asString()) :
-                        new Value(left.asDouble() + right.asDouble());
-
+                if(left.isString() && right.isString()) {
+                    return new Value(left.asString() + right.asString());
+                } else if(left.isDouble() && right.isDouble()){
+                    new Value(left.asDouble() + right.asDouble());
+                } else {
+                    new Value(left.asInteger() + right.asInteger());
+                }
             case LanguageParser.SUB:
-                return new Value(left.asDouble() - right.asDouble());
+                return left.isDouble() && right.isDouble() ?
+                        new Value(left.asDouble() - right.asDouble()) :
+                        new Value(left.asInteger() - right.asInteger());
             default:
                 throw new RuntimeException("unknown operator: " + LanguageParser.tokenNames[ctx.op.getType()]);
         }
@@ -175,13 +187,21 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
 
         switch (ctx.op.getType()) {
             case LanguageParser.LT:
-                return new Value(left.asDouble() < right.asDouble());
+                return left.isDouble() && right.isDouble() ?
+                        new Value(Double.compare(left.asDouble(), right.asDouble()) < 0) :
+                        new Value(left.asInteger() < right.asInteger());
             case LanguageParser.LTEQ:
-                return new Value(left.asDouble() <= right.asDouble());
+                return left.isDouble() && right.isDouble() ?
+                        new Value(Double.compare(left.asDouble(), right.asDouble()) <= 0) :
+                        new Value(left.asInteger() <= right.asInteger());
             case LanguageParser.GT:
-                return new Value(left.asDouble() > right.asDouble());
+                return left.isDouble() && right.isDouble() ?
+                        new Value(Double.compare(left.asDouble(), right.asDouble()) > 0) :
+                        new Value(left.asInteger() > right.asInteger());
             case LanguageParser.GTEQ:
-                return new Value(left.asDouble() >= right.asDouble());
+                return left.isDouble() && right.isDouble() ?
+                        new Value(Double.compare(left.asDouble(), right.asDouble()) >= 0) :
+                        new Value(left.asInteger() >= right.asInteger());
             default:
                 throw new RuntimeException("unknown operator: " + LanguageParser.tokenNames[ctx.op.getType()]);
         }
@@ -195,13 +215,9 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
 
         switch (ctx.op.getType()) {
             case LanguageParser.EQUAL:
-                return left.isDouble() && right.isDouble() ?
-                        new Value(Math.abs(left.asDouble() - right.asDouble()) < DOUBLE_COMPARE) :
-                        new Value(left.equals(right));
+                return new Value(left.equals(right));
             case LanguageParser.NOTEQUAL:
-                return left.isDouble() && right.isDouble() ?
-                        new Value(Math.abs(left.asDouble() - right.asDouble()) >= DOUBLE_COMPARE) :
-                        new Value(!left.equals(right));
+                return new Value(!left.equals(right));
             default:
                 throw new RuntimeException("unknown operator: " + LanguageParser.tokenNames[ctx.op.getType()]);
         }
@@ -228,15 +244,11 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
 
     @Override
     public Value visitNumberAtom(LanguageParser.NumberAtomContext ctx) {
-        return new Value(Double.valueOf(ctx.getText()));
-/*        switch (Integer.valueOf(ctx.children.get(0).getText())) {
-            case LanguageParser.DOULOT_VALUE:
-                return new Value(Double.valueOf(ctx.getText()));
-            case LanguageParser.WHOLE_VALUE:
-                return new Value(Integer.valueOf(ctx.getText()));
-            default:
-                throw new RuntimeException("unknown operator: " + LanguageParser.tokenNames[ctx.invokingState]);
-        }*/
+        if(ctx.WHOLE_VALUE() == null) {
+            return new Value(Double.valueOf(ctx.getText()));
+        }else {
+            return new Value(Integer.valueOf(ctx.getText()));
+        }
     }
 
     @Override

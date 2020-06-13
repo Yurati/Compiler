@@ -23,4 +23,4 @@ not this time )val < 12( }
 {
 
 print val;
-print "Nie dzialaj"
+print "Nie dzialaj";
