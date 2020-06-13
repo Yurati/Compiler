@@ -1,3 +1,6 @@
+print 1337;
+print "Dzialaj";
+
 func whole val == 23;
 
 unless )val ?== 2( }
@@ -18,3 +21,6 @@ dont }
 not this time )val < 12( }
     func inscription ddd == "";
 {
+
+print val;
+print "Nie dzialaj"

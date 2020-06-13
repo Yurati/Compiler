@@ -3,6 +3,10 @@ package compiler;
 public class Value {
     private Object value;
 
+    public Value(){
+        this.value = new Object();
+    }
+
     public Value(Object object) {
         this.value = object;
         if (!(isDouble() || isInteger() || isBoolean() || isString()))
@@ -40,6 +44,8 @@ public class Value {
         return (String) value;
     }
 
-
-
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
 }

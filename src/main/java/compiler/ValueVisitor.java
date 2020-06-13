@@ -5,7 +5,6 @@ import grammar.LanguageParser;
 import grammar.LanguageParserBaseVisitor;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
@@ -42,48 +41,56 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
 
     @Override
     public Value visitIf_stat(LanguageParser.If_statContext ctx) {
-        LanguageParser.Condition_blockContext conditions =  ctx.condition_block();
+
+        LanguageParser.Condition_blockContext conditionBlock =  ctx.condition_block();
 
         boolean evaluatedBlock = false;
 
-        for(LanguageParser.Condition_blockContext condition : conditions) {
+        Value evaluated = this.visit(conditionBlock.condition());
 
-            Value evaluated = this.visit(condition.expr());
-
-            if(evaluated.asBoolean()) {
-                evaluatedBlock = true;
-                // evaluate this block whose expr==true
-                this.visit(condition.stat_block());
-                break;
-            }
+        if(evaluated.asBoolean()) {
+            evaluatedBlock = true;
+            // evaluate this block whose expr==true
+            this.visit(conditionBlock.stat_block());
         }
 
+
         if(!evaluatedBlock && ctx.stat_block() != null) {
-            // evaluate the else-stat_block (if present == not null)
             this.visit(ctx.stat_block());
         }
 
-        return new Value(new Object());
-    }
-
-    @Override
-    public Value visitCondition(LanguageParser.ConditionContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Value visitCondition_block(LanguageParser.Condition_blockContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Value visitStat_block(LanguageParser.Stat_blockContext ctx) {
-        return null;
+        return new Value();
     }
 
     @Override
     public Value visitWhile_stat(LanguageParser.While_statContext ctx) {
-/*        Value value = this.visit(ctx.expr());
+
+        LanguageParser.Condition_blockContext conditionBlock =  ctx.condition_block();
+
+        Value value = this.visit(conditionBlock.condition());
+
+        while(value.asBoolean()) {
+
+            // evaluate the code block
+            this.visit(conditionBlock.stat_block());
+
+            // evaluate the expression
+            value = this.visit(conditionBlock.condition());
+        }
+
+        return new Value();
+    }
+
+    @Override
+    public Value visitFor_stat(LanguageParser.For_statContext ctx) {
+
+        return new Value();
+    }
+
+    @Override
+    public Value visitDo_while_stat(LanguageParser.Do_while_statContext ctx) {
+
+        Value value = this.visit(ctx.condition());
 
         while(value.asBoolean()) {
 
@@ -91,28 +98,22 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
             this.visit(ctx.stat_block());
 
             // evaluate the expression
-            value = this.visit(ctx.expr());
+            value = this.visit(ctx.condition());
         }
 
-        return Value.VOID;*/
-        return null;
+        return new Value();
     }
 
     @Override
-    public Value visitFor_stat(LanguageParser.For_statContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Value visitDo_while_stat(LanguageParser.Do_while_statContext ctx) {
-        return null;
+    public Value visitCondition(LanguageParser.ConditionContext ctx) {
+        return this.visit(ctx.expr());
     }
 
     @Override
     public Value visitPrint(LanguageParser.PrintContext ctx) {
         Value value = this.visit(ctx.expr());
         System.out.println(value);
-        return value;
+        return null;
     }
 
     @Override
@@ -227,7 +228,6 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
 
     @Override
     public Value visitNumberAtom(LanguageParser.NumberAtomContext ctx) {
-        System.out.println(LanguageParser.DOULOT_VALUE);
         return new Value(Double.valueOf(ctx.getText()));
 /*        switch (Integer.valueOf(ctx.children.get(0).getText())) {
             case LanguageParser.DOULOT_VALUE:
