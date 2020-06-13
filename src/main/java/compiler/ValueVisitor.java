@@ -14,7 +14,8 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
     public Value visitAssignment(LanguageParser.AssignmentContext ctx) {
         String id = ctx.ID().getText();
         Value value = visit(ctx.expr());
-        return memory.put(id, value);
+        memory.put(id, value);
+        return value;
     }
 
     @Override
@@ -63,11 +64,22 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
 
         LanguageParser.For_conditionContext forCondition =  ctx.for_condition();
 
-        LanguageParser.AssignmentContext assignments1 = forCondition.assignment(1);
-        LanguageParser.AssignmentContext assignments2 = forCondition.assignment(2);
+        LanguageParser.AssignmentContext assignments = forCondition.assignment(0);
+        LanguageParser.AssignmentContext assignmentIncrement = forCondition.assignment(1);
 
-        Value val1 = visitAssignment(assignments1);
-        Value val2 = visitAssignment(assignments2);
+        this.visit(assignments);
+
+        Value val3 = this.visit(forCondition.expr());
+
+        while(val3.asBoolean()) {
+
+            // evaluate the code block
+            this.visit(forCondition.stat_block());
+
+            // evaluate the expression
+            this.visit(assignmentIncrement);
+            val3 = this.visit(forCondition.expr());
+        }
         return new Value();
     }
 
@@ -141,9 +153,9 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
                 if(left.isString() && right.isString()) {
                     return new Value(left.asString() + right.asString());
                 } else if(left.isDouble() && right.isDouble()){
-                    new Value(left.asDouble() + right.asDouble());
+                    return new Value(left.asDouble() + right.asDouble());
                 } else {
-                    new Value(left.asInteger() + right.asInteger());
+                    return new Value(left.asInteger() + right.asInteger());
                 }
             case LanguageParser.SUB:
                 return left.isDouble() && right.isDouble() ?
