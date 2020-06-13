@@ -8,33 +8,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
-    Map<String, Value> memory = new HashMap<>();
-
-/*    @Override
-    public Value visitParse(LanguageParser.ParseContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Value visitBlock(LanguageParser.BlockContext ctx) {
-        return null;
-    }
-
-    @Override
-    public Value visitStat(LanguageParser.StatContext ctx) {
-        return null;
-    }*/
+    private Map<String, Value> memory = new HashMap<>();
 
     @Override
     public Value visitAssignment(LanguageParser.AssignmentContext ctx) {
         String id = ctx.ID().getText();
         Value value = visit(ctx.expr());
         return memory.put(id, value);
-    }
-
-    @Override
-    public Value visitType(LanguageParser.TypeContext ctx) {
-        return null;
     }
 
     @Override
@@ -83,6 +63,11 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
 
         LanguageParser.For_conditionContext forCondition =  ctx.for_condition();
 
+        LanguageParser.AssignmentContext assignments1 = forCondition.assignment(1);
+        LanguageParser.AssignmentContext assignments2 = forCondition.assignment(2);
+
+        Value val1 = visitAssignment(assignments1);
+        Value val2 = visitAssignment(assignments2);
         return new Value();
     }
 
@@ -124,16 +109,6 @@ public class ValueVisitor extends LanguageParserBaseVisitor<Value> {
         Value value = this.visit(ctx.expr());
         return new Value(!value.asBoolean());
     }
-
-/*    @Override
-    public Value visitAtomExpr(LanguageParser.AtomExprContext ctx) {
-        String id = ctx.getText();
-        Value value = memory.get(id);
-        if(value == null) {
-            throw new RuntimeException("no such variable: " + id);
-        }
-        return value;
-    }*/
 
     @Override
     public Value visitMultiplicationExpr(LanguageParser.MultiplicationExprContext ctx) {
