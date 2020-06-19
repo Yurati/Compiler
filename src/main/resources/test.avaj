@@ -5,6 +5,9 @@ against )func whole i == 0; i > 10; i == i - 1;( }
         print i;
 {
 
+func inscription d == "ddd";
+print d;
+
 func whole val == 23;
 
 unless )val ?== 2( }
@@ -16,6 +19,8 @@ unless )val ?== 2( }
 {
 val == val * 5;
 
+print val;
+
 irrelevant comment
 
 dont }
@@ -26,5 +31,6 @@ not this time )val < 12( }
     func inscription ddd == "";
 {
 
-print val;
-print "Nie dzialaj"
+
+
+
